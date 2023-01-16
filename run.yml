@@ -1,0 +1,22 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- hosts: all
+  become: true
+
+  # vars_files:
+  #   - custom.yml
+  #     - secret.yml
+
+  roles:
+    - role: system
+      tags:
+        - system
+
+    - role: docker
+      tags:
+        - docker
+
+    - role: wireguard
+      tags:
+        - wireguard 
