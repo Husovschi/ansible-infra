@@ -1,6 +1,5 @@
 ---
 roles:
-  - name: amazon.aws
   - name: geerlingguy.repo-epel
   - name: geerlingguy.security
   - name: geerlingguy.docker
