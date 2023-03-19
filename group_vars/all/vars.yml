@@ -1,0 +1,55 @@
+#
+# Misc
+#
+hostname: ubuntu
+
+timezone: Europe/Berlin
+
+ntp_timezone: '{{ timezone }}'
+
+locale: en_US.UTF-8
+
+keyboard_layout: us
+
+username: ubuntu
+
+shell: /usr/bin/bash
+
+guid: 1000
+
+#
+# DuckDNS
+#
+duckdns_token: '{{ duckdns_token }}' # 9b1c73dc-166e-44ee-8904-5c29788d03cd
+duckdns_domain: '{{ duckdns_domain }}' # husovschi
+cron_schedule: "*/15 * * * *"  # Update every 15 minutes
+
+#
+# Networking
+# 
+tailscale_enabled: yes 
+
+tailscale_exit_node: no
+
+networks:
+  - name: lan
+    cidr: 192.168.2.0/24
+    base: 192.168.2
+    interface: ens18
+    tailscale: yes # whether the subnet should be exposed to other Tailscale nodes
+
+#
+# Packages
+#
+extra_packages:
+  - iperf3
+  - speedtest-cli
+  - htop
+  - stow
+  - git
+  - neofetch
+  - neovim
+  - tmux
+  - mosh
+  - rsync
+  - iotop

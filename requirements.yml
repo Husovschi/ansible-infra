@@ -1,10 +1,8 @@
 ---
 roles:
-  - name: chriswayg.msmtp-mailer
-
-collections:
   - name: amazon.aws
-  - name: community.docker
-  - name: community.general
-  - name: community.crypto
-  - name: ansible.posix
+  - name: geerlingguy.repo-epel
+  - name: geerlingguy.security
+  - name: geerlingguy.docker
+  - name: geerlingguy.ntp
+  - name: chriswayg.msmtp-mailer

@@ -1,22 +1,31 @@
-#!/usr/bin/env ansible-playbook
 ---
-
-- hosts: all
-  become: true
-
-  vars_files:
-    - custom.yml
-    - secret.yml
+#
+# Tasks and roles for all hosts
+#
+- hosts:
+    vps:
+      ansible_host: '{{ ansible_host }}'
+      ansible_user: ubuntu
+      ansible_ssh_private_key_file: LightsailKey
+      become: yes
 
   roles:
-    - role: system
-      tags:
-        - system
+      #
+      # Basics
+      #
+      - role: system
+        tags:
+            - system
 
-    - role: docker
-      tags:
-        - docker
+      - role: geerlingguy.security
+        tags:
+            - security
 
-    - role: wireguard
-      tags:
-        - wireguard 
+      - role: geerlingguy.docker
+        tags:
+            - docker
+
+      - role: tailscale
+        when: tailscale_enabled | default(false)
+        tags:
+            - tailscale

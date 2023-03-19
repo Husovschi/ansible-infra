@@ -1,57 +1,47 @@
 ---
-- name: Ensure group sudo exists
-  ansible.builtin.group:
-    name: sudo
-    state: present
+- name: Set the name of a sudo group
+  set_fact:
+    sudo_group: sudo
 
-- name: Allow sudo group to have passwordless sudo
-  ansible.builtin.lineinfile:
-    path: /etc/sudoers
+- name: Ensure the necessary groupsexists
+  group:
+    name: "{{ item }}"
     state: present
-    regexp: "^%sudo"
-    line: "%sudo ALL=(ALL) NOPASSWD: ALL"
-    validate: "/usr/sbin/visudo -cf %s"
-  when: enable_passwordless_sudo | default(False)
+  loop:
+      - "{{ username }}"
+      - docker
 
 - name: Create a login user
-  ansible.builtin.user:
+  user:
     name: "{{ username }}"
-    password: "{{ user_password | string | password_hash('sha512') }}"
-    groups:
-      - sudo
+    password: "{{ password | password_hash('sha512') }}"
+    groups: 
+      - "{{ sudo_group }}"
+      - docker
       - users
     state: present
     append: true
-    shell: "{{ user_shell }}"
-  when: enable_username_creation | default(False)
-
-- name: Ensure group "{{ username }}" exists
-  ansible.builtin.group:
-    name: "{{ username }}"
-    state: present
-  when: enable_username_creation | default(False)
 
 - name: Chmod the user home directory
-  ansible.builtin.file:
+  file:
     path: "/home/{{ username }}"
     state: directory
     mode: 0755
     owner: "{{ username }}"
     group: "{{ username }}"
     recurse: yes
-  when: enable_username_creation | default(False)
 
-- name: Check if the Ansible playbook is copied to the new user directory
-  ansible.builtin.stat:
-    path: "/home/{{ username }}/ansible-infra"
-  register: playbook_copied
+- name: Allow '{{ sudo_group }}' group to have passwordless sudo
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%{{ sudo_group }}'
+    line: '%{{ sudo_group }} ALL=(ALL) NOPASSWD: ALL'
+    validate: '/usr/sbin/visudo -cf %s'
 
-- name: Copy the Ansible playbook to the new user
-  ansible.builtin.copy:
-    src: "/{{ lookup('env', 'HOME') }}/ansible-infra"
-    dest: "/home/{{ username }}"
-    owner: "{{ username }}"
-    decrypt: no
-    group: "{{ username }}"
-    mode: 0750
-  when: not playbook_copied.stat.exists
+- name: Disable cron e-mail notifications
+  cron:
+    name: MAILTO
+    user: "{{ username }}"
+    env: yes
+    job: ""

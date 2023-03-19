@@ -1,0 +1,11 @@
+---
+
+- name: Create cron job
+  cron:
+    name: "Update DuckDNS hostname with current IP address"
+    minute: "{{ cron_schedule.split(' ')[0] }}"
+    hour: "{{ cron_schedule.split(' ')[1] }}"
+    day: "{{ cron_schedule.split(' ')[2] }}"
+    month: "{{ cron_schedule.split(' ')[3] }}"
+    weekday: "{{ cron_schedule.split(' ')[4] }}"
+    job: "curl -sS 'https://www.duckdns.org/update?domains={{ duckdns_domain }}&token={{ duckdns_token }}&ip='$(curl -sS https://api.ipify.org)"

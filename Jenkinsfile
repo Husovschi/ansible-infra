@@ -25,26 +25,19 @@ pipeline {
             }
         }
 
-        stage('Create custom.yml') {
-            steps {
-                script {
-                    String fileContents = """
-                    username: ubuntu
-                    ansible_ssh_private_key_file: LightsailKey
-                    ansible_host: $params.ANSIBLE_HOST 
-                    """
-                    writeFile file: 'custom.yml', text: fileContents
-                }
-            }
-        }
-
         stage('Create AWS credentials file') {
             steps {
                 script {
-                    withCredentials([[$class: 'VaultUsernamePasswordCredentialBinding', credentialsId: 'vault-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID']]) {
+                    withCredentials([
+                            [$class: 'VaultUsernamePasswordCredentialBinding', credentialsId: 'vault-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID'],
+                            [$class: 'VaultUsernamePasswordCredentialBinding', credentialsId: 'vault-duckdns', passwordVariable: 'DUCKDNS_TOKEN', usernameVariable: 'DUCKDNS_DOMAIN'],
+                        ]) {
                         String fileContents = """
+                        ansible_host: ${params.ANSIBLE_HOST} 
                         aws_access_key_id: ${AWS_ACCESS_KEY_ID}
                         aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+                        duckdns_token: ${DUCKDNS-TOKEN}
+                        duckdns_domain: ${DUCKDNS-DOMAIN}
                         """
                         writeFile file: 'secret.yml', text: fileContents
                     }
