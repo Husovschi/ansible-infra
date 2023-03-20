@@ -9,6 +9,9 @@
       ansible_ssh_private_key_file: LightsailKey
       become: yes
 
+  vars_files:
+    - secret.yml
+
   roles:
       #
       # Basics
