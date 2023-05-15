@@ -45,6 +45,7 @@ pipeline {
                         String fileContents = """
                         aws_access_key_id: ${AWS_ACCESS_KEY_ID}
                         aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+                        duckdns_token: ${DUCKDNS_TOKEN}
                         """
                         writeFile file: 'secret.yml', text: fileContents
                     }

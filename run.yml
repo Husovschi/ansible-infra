@@ -19,4 +19,8 @@
 
     - role: wireguard
       tags:
-        - wireguard 
+        - wireguard
+
+    - role: rofrantz.duckdns
+      tags:
+        - duckdns  

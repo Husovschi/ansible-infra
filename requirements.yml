@@ -1,6 +1,7 @@
 ---
 roles:
   - name: chriswayg.msmtp-mailer
+  - name: rofrantz.duckdns
 
 collections:
   - name: amazon.aws
