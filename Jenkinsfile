@@ -41,7 +41,9 @@ pipeline {
         stage('Create AWS credentials file') {
             steps {
                 script {
-                    withCredentials([[$class: 'VaultUsernamePasswordCredentialBinding', credentialsId: 'vault-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID']]) {
+                    withCredentials([
+                        [$class: 'VaultUsernamePasswordCredentialBinding', credentialsId: 'vault-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID'],
+                        [$class: 'VaultUsernamePasswordCredentialBinding', credentialsId: 'vault-duckdns', passwordVariable: 'DUCKDNS_TOKEN']]) {
                         String fileContents = """
                         aws_access_key_id: ${AWS_ACCESS_KEY_ID}
                         aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
