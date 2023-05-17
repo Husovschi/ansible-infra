@@ -98,7 +98,7 @@ all:
     duckdns_group: duckdns
 
     # DuckDNS remote settings
-    duckdns_subdomain: husovschi-app.duckdns.org
+    duckdns_subdomain: husovschi-cloud.duckdns.org
     duckdns_token: '{{ duckdns_token }}'
 
     # DuckDNS immediate update
